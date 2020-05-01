@@ -10,11 +10,14 @@ public:
 	// デストラクタ
 	~Bowl();
 
+protected:
 	// アイテム初期化
 	void InitItems() override;
 
 private:
 	// 親クラス設定
+	// 他の言語ではsuperやbaseという名前で親クラスを呼び出すことができる。
+	// C++でははそれができないみたいなので、別途親クラスを宣言している。
 	typedef baseMenu super;
 };
 

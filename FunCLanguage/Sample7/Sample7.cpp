@@ -19,6 +19,8 @@ int main()
 	const int YES = 1;		// Yes
 
 	// メニュー一覧
+	// ベースクラスが同じだと、別々のクラスを一括してリストに格納できる。
+	// 関数も同じように呼び出すことができます。今回ではGetNameやGetItemsを指します。
 	std::vector<baseMenu> menu;
 	menu.push_back(Noodles());	// 麺類追加
 	menu.push_back(Bowl());		// 丼もの追加
