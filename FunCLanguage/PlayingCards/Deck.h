@@ -10,7 +10,10 @@ using namespace std;
 class Deck
 {
 public:
-	Deck(bool inJoker);
+
+	static const int DECK_LENGTH = 52;
+
+	Deck();
 	~Deck();
 
 	void Init();
@@ -19,16 +22,16 @@ public:
 	void Shuffle();
 	Card GetCard();
 	void Next();
+	bool GameSet();
 
 private:
-	static const int DECK_LENGTH = 52;
 
 	vector<Card> deck = vector<Card>();
 	int showDeck[DECK_LENGTH];
 	int index = 0;
 };
 
-Deck::Deck(bool inJoker = false)
+Deck::Deck()
 {
 	int count = 0;
 	index = 0;
@@ -42,9 +45,6 @@ Deck::Deck(bool inJoker = false)
 			count++;
 		}
 	}
-
-	if (inJoker)
-		deck.push_back(Card());
 }
 
 Deck::~Deck()
@@ -104,8 +104,10 @@ inline void Deck::ShowAciveCard()
 
 inline void Deck::Shuffle()
 {
-	mt19937 random;
-	shuffle(deck.begin(), deck.end(), random);
+	random_device rand;
+	mt19937 engine(rand());
+
+	shuffle(deck.begin(), deck.end(), engine);
 }
 
 inline Card Deck::GetCard()
@@ -122,4 +124,9 @@ inline void Deck::Next()
 	showDeck[((mark - 1) * 13) + number - 1] = 0;
 
 	index++;
+}
+
+inline bool Deck::GameSet()
+{
+	return ((DECK_LENGTH - 1) <= index);
 }
