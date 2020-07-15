@@ -21,24 +21,36 @@ template <typename Array, int N>
 constexpr int arraySize(Array(&)[N]) { return N; }
 
 #pragma region MainLoop
+/// <summary>ゲームマネージャクラス</summary>
 class GameManager
 {
 private:
-	static const int SEC = 1000;
-	static const int BaseScore = 10 * 60;
 
+	static const int SEC = 1000;			/// <summary>ミリ秒</summary>
+	static const int BaseScore = 10 * 60;	/// <summary>基準スコア</summary>
+
+	/// <summary>デバッグモード</summary>
 	bool debugMode = false;
+	/// <summary>ゲームステータス</summary>
 	int state = MENU;
+	/// <summary>スコア</summary>
 	int score = 0;
+	/// <summary>デッキ</summary>
 	Deck deck = Deck();
+	/// <summary>今のカード</summary>
 	Card nowCard = Card();
+	/// <summary>引いたカード</summary>
 	Card drawCard = Card();
 
+	/// <summary>違反プレイヤ判定</summary>
 	bool badPlayer = false;
+	/// <summary>自動勝利機能</summary>
 	bool AutoWin = false;
 
+	/// <summary>よく気付いたな、勝利コマンドだ！</summary>
 	const string IOftenFound = "qpmz";
 
+	/// <summary>メニューテキスト</summary>
 	const string MenuInfo =
 		"━━━━━━━━━━━　High & Low　━━━━━━━━━━━━━━━━　\n"
 		"ルール\n"
@@ -54,6 +66,7 @@ private:
 		"Yes（ y ）：はじめる\n"
 		"No （ n ）：おわる\n";
 
+	/// <summary>ゲームクリアテキスト</summary>
 	const string GOOD_JOB =
 		"･+ﾟ'(ﾉ｡´∀｀)ﾉ ヽ(´ε｀｡ヽ)'ﾟ+｡\n"
 		"Game Clear!!\n"
@@ -261,13 +274,13 @@ private:
 		"　　　　　　　口　　　　　　＜　いつでも見ているぞ\n",
 
 		"　　　　目　　　　　目\n"
-		"　　　　　　　口　　　　　　＜　%s\n",		// 検索エンジン使用　メッセージ表示 33
+		"　　　　　　　口　　　　　　＜　%s%s\n",		// 検索エンジン使用　メッセージ表示 33
 
 		"　　　　目　　　　　目\n"
-		"　　　　　　　口　　　　　　＜　%s\n",		// チャットソフト使用　メッセージ表示 34
+		"　　　　　　　口　　　　　　＜　%s%s\n",		// チャットソフト使用　メッセージ表示 34
 
 		"　　　　目　　　　　目\n"
-		"　　　　　　　口　　　　　　＜　%s\n",		// 録画ソフト使用　メッセージ表示 35
+		"　　　　　　　口　　　　　　＜　%s%s\n",		// 録画ソフト使用　メッセージ表示 35
 
 		// 身が崩れる　6種類
 		"　　　　目　　　　　目\n"
@@ -359,52 +372,66 @@ private:
 #pragma endregion
 
 public:
-	static const int MENU = 0;
-	static const int PLAY = 1;
-	static const int END = 2;
-	static const int EXIT = 3;
-	static const int VIOLATION_START = 4;
-	static const int VIOLATION_GAME = 5;
-	static const int VIOLATION_END = 6;
-	static const int VIOLATION_MENU = 7;
 
-	static const int NONE = 0;
-	static const int HIGH = 1;
-	static const int LOW = 2;
+	static const int MENU = 0;				/// <summary>ステータス：メニュー</summary>
+	static const int PLAY = 1;				/// <summary>ステータス：プレイ</summary>
+	static const int END = 2;				/// <summary>ステータス：エンド</summary>
+	static const int EXIT = 3;				/// <summary>ステータス：終了</summary>
+	static const int VIOLATION_START = 4;	/// <summary>違反ステータス：始まる</summary>
+	static const int VIOLATION_GAME = 5;	/// <summary>違反ステータス：償い</summary>
+	static const int VIOLATION_END = 6;		/// <summary>違反ステータス：解放</summary>
+	static const int VIOLATION_MENU = 7;	/// <summary>違反ステータス：終焉</summary>
 
+	static const int NONE = 0;	/// <summary>コマンド：なし</summary>
+	static const int HIGH = 1;	/// <summary>コマンド：高い</summary>
+	static const int LOW = 2;	/// <summary>コマンド：低い</summary>
+
+	/// <summary>コンストラクタ</summary>
 	GameManager();
+	/// <summary>デストラクタ</summary>
 	~GameManager();
 
+	/// <summary>メインループ</summary>
 	void MainLoop();
+	/// <summary>メニュー表示</summary>
 	void ShowMenu();
+	/// <summary>ゲーム本編</summary>
 	void PlayGame();
+	/// <summary>ゲーム終了</summary>
 	void GameEnd();
 
+	/// <summary>標準入力</summary>
+	string GetLine();
+	/// <summary>コマンドチェック</summary>
+	bool CheckCommand(string command, string check, string check2 = "");
+
+#pragma region VIOLATION
 	void ViolationStart();
 	void ViolationGame();
 	void ViolationEnd();
 	void ViolationMenu();
 
-	string GetLine();
-	bool CheckCommand(string command, string check, string check2 = "");
 	string Garble(int length);
-
 	tm GetNowTime();
 	void GetProcess();
 	bool FindProcess(string name);
 
 	void MsgRed() { printf("\x1b[31m"); }
 	void MsgWhite() { printf("\x1b[37m"); }
+#pragma endregion
 };
 
+/// <summary>コンストラクタ</summary>
 GameManager::GameManager()
 {
 }
 
+/// <summary>デストラクタ</summary>
 GameManager::~GameManager()
 {
 }
 
+/// <summary>メインループ</summary>
 void GameManager::MainLoop()
 {
 	while (state != EXIT)
@@ -414,19 +441,23 @@ void GameManager::MainLoop()
 		case MENU:ShowMenu(); break;
 		case PLAY:PlayGame(); break;
 		case END:GameEnd(); break;
+#pragma region VIOLATION
 		case VIOLATION_START:ViolationStart(); break;
 		case VIOLATION_GAME:ViolationGame(); break;
 		case VIOLATION_END:ViolationEnd(); break;
 		case VIOLATION_MENU:ViolationMenu(); break;
-		default:break;
+#pragma endregion
+		default:state = EXIT; break;
 		}
 	}
 }
 
+/// <summary>メニュー表示</summary>
 void GameManager::ShowMenu()
 {
 	std::system("cls");
 
+	// 初期化
 	deck.Init();
 	deck.Shuffle();
 	score = 0;
@@ -434,18 +465,21 @@ void GameManager::ShowMenu()
 	nowCard = deck.GetCard();
 	deck.Next();
 
+	// メニューの表示
 	if (!badPlayer)
 		cout << MenuInfo << endl;
 	else
 		cout << MenuBadInfo << endl;
 
+	// コマンド入力
 	string command;
 	command = GetLine();
 
-	if (CheckCommand(command, "yes", "y"))state = (badPlayer) ? VIOLATION_GAME : VIOLATION_GAME;//PLAY;
+	if (CheckCommand(command, "yes", "y"))state = (badPlayer) ? VIOLATION_GAME : PLAY;
 	if (CheckCommand(command, "no", "n") || CheckCommand(command, "exit", "e"))state = EXIT;
 }
 
+/// <summary>ゲーム本編</summary>
 void GameManager::PlayGame()
 {
 	std::system("cls");
@@ -453,23 +487,26 @@ void GameManager::PlayGame()
 	deck.ShowAciveCard();
 	drawCard = deck.GetCard();
 
+	// スコア表示
 	cout << "<< SCORE  " << right << setw(15) << score << "  >>" << endl << endl << endl;
 
 	if (debugMode)cout << "Next -->" << left << setw(9) << drawCard.GetMarkToString() << left << setw(2) << drawCard.GetNumber() << endl;
 	else cout << endl;
 
+	// 場のカード・メニュー表示
 	cout << "Show  >> " << left << setw(9) << nowCard.GetMarkToString() << left << setw(2) << nowCard.GetNumber() << endl;
 	cout << "high( h ) /  Low( l )" << endl;
 
 	if (AutoWin)cout << "I often found." << endl;
 
+	// コマンド入力中の経過時間でスコア算出
+	// 早く判断した分だけ高得点
 	clock_t start = clock();
-
 	string command;
 	command = GetLine();
-
 	clock_t end = clock();
 
+	// コマンド判定
 	if (CheckCommand(command, "debug", "d"))
 	{
 		debugMode = !debugMode;
@@ -485,12 +522,14 @@ void GameManager::PlayGame()
 
 	if (myJudg == NONE)return;
 
+	// High/Lowの判定処理
 	if (nowCard.GetNumber() < drawCard.GetNumber())result = HIGH;
 	else if (nowCard.GetNumber() == drawCard.GetNumber())result = myJudg;
 	else result = LOW;
 
 	cout << "Check >> " << left << setw(9) << drawCard.GetMarkToString() << left << setw(2) << drawCard.GetNumber() << endl;
 
+	// 勝敗分岐
 	if (myJudg == result || AutoWin)
 	{
 		cout << "Win!!" << endl;
@@ -506,6 +545,7 @@ void GameManager::PlayGame()
 
 	nowCard = drawCard;
 
+	// ゲームセット判定
 	if (deck.GameSet()) {
 		state = END;
 		return;
@@ -514,12 +554,14 @@ void GameManager::PlayGame()
 	deck.Next();
 }
 
+/// <summary>ゲーム終了</summary>
 void GameManager::GameEnd()
 {
 	std::system("cls");
 
 	if (!badPlayer)
 	{
+		// リザルト表示
 		cout << endl << "<< SCORE  " << right << setw(15) << score << "  >>" << endl << endl << endl;
 
 		if (deck.GameSet())cout << GOOD_JOB;
@@ -545,6 +587,7 @@ void GameManager::GameEnd()
 #pragma endregion
 	}
 
+	// コマンド判定
 	string command;
 	command = GetLine();
 
@@ -552,6 +595,7 @@ void GameManager::GameEnd()
 	if (CheckCommand(command, "end") || CheckCommand(command, "exit", "e"))state = EXIT;
 }
 
+#pragma region VIOLATION
 void GameManager::ViolationStart()
 {
 	std::system("cls");
@@ -645,23 +689,23 @@ void GameManager::ViolationGame()
 
 	case VIO_MESSAGE_33:
 		if (FindProcess("chrome.exe"))
-			printf(ViolationMessage[ViolationIndex], "Chrome" + SearchEngine);
+			printf(ViolationMessage[ViolationIndex], "Chrome", SearchEngine.c_str());
 		else
-			printf(ViolationMessage[ViolationIndex], Garble(10).c_str());
+			printf(ViolationMessage[ViolationIndex], Garble(5).c_str(), Garble(5).c_str());
 		break;
 
 	case VIO_MESSAGE_34:
 		if (FindProcess("lineapp.exe"))
-			printf(ViolationMessage[ViolationIndex], "Line" + ChatApp);
+			printf(ViolationMessage[ViolationIndex], "Line", ChatApp.c_str());
 		else
-			printf(ViolationMessage[ViolationIndex], Garble(10).c_str());
+			printf(ViolationMessage[ViolationIndex], Garble(5).c_str(), Garble(5).c_str());
 		break;
 
 	case VIO_MESSAGE_35:
 		if (FindProcess("GameBar.exe"))
-			printf(ViolationMessage[ViolationIndex], ChatApp + "(GameBar)");
+			printf(ViolationMessage[ViolationIndex], ChatApp.c_str(), "GameBar");
 		else
-			printf(ViolationMessage[ViolationIndex], Garble(10).c_str());
+			printf(ViolationMessage[ViolationIndex], Garble(5).c_str(), Garble(5).c_str());
 		break;
 
 	default:
@@ -806,33 +850,6 @@ void GameManager::ViolationMenu()
 	state = EXIT;
 }
 
-string GameManager::GetLine()
-{
-	int limit = 100;
-
-	string ss;
-	getline(cin, ss);
-
-	if (ss.length() >= limit)
-	{
-		state = VIOLATION_START;
-		ss = "";
-	}
-
-	return ss;
-}
-
-bool GameManager::CheckCommand(string command, string check, string check2)
-{
-	for (size_t ch = command.find_first_of(" "); ch != string::npos; ch = ch = command.find_first_of(" "))
-		command.erase(ch, 1);
-
-	if (!check2.empty())
-		return regex_match(command, regex(check, regex::icase)) || regex_match(command, regex(check2, regex::icase));
-
-	return regex_match(command, regex(check, regex::icase));
-}
-
 string GameManager::Garble(int length)
 {
 	srand((unsigned int)time(NULL));
@@ -898,15 +915,51 @@ bool GameManager::FindProcess(string name)
 	if (itr != processList.end())return true;
 	return false;
 }
+#pragma endregion
 
+/// <summary>標準入力</summary>
+string GameManager::GetLine()
+{
+	// 標準入力
+	string ss;
+	getline(cin, ss);
+
+	// 違反者分岐
+	int limit = 100;
+	if (ss.length() >= limit)
+	{
+		state = VIOLATION_START;
+		ss = "";
+	}
+
+	return ss;
+}
+
+/// <summary>コマンドチェック 大文字小文字は許容する</summary>
+bool GameManager::CheckCommand(string command, string check, string check2)
+{
+	for (size_t ch = command.find_first_of(" "); ch != string::npos; ch = ch = command.find_first_of(" "))
+		command.erase(ch, 1);
+
+	if (!check2.empty())
+		return regex_match(command, regex(check, regex::icase)) || regex_match(command, regex(check2, regex::icase));
+
+	return regex_match(command, regex(check, regex::icase));
+}
+#pragma endregion
+
+/// <summary>メイン</summary>
 int main()
 {
+	// ウィンドウタイトル
 	SetConsoleTitle("High & Low");
 
+	// ウィンドウ最大表示
 	HWND hWnd = GetConsoleWindow();
 	ShowWindow(hWnd, SW_MAXIMIZE);
 	SendMessage(hWnd, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
 
+	// ゲームインスタンス生成
 	GameManager GM = GameManager();
 	GM.MainLoop();
 

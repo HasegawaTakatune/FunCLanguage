@@ -7,30 +7,45 @@
 
 using namespace std;
 
+/// <summary>デッキクラス</summary>
 class Deck
 {
 public:
 
+	/// <summary>デッキのカード最大枚数</summary>
 	static const int DECK_LENGTH = 52;
 
+	/// <summary>コンストラクタ</summary>
 	Deck();
+	/// <summary>デストラクタ</summary>
 	~Deck();
 
+	/// <summary>初期化</summary>
 	void Init();
+	/// <summary>デッキカードを全て表示</summary>
 	void ShowAll();
+	/// <summary>まだ引いていないデッキカードを表示</summary>
 	void ShowAciveCard();
+	/// <summary>デッキをシャッフルする</summary>
 	void Shuffle();
+	/// <summary>カードを取得する</summary>
 	Card GetCard();
+	/// <summary>次のカードを設定する</summary>
 	void Next();
+	/// <summary>カードが最後まで引いたかを確認する</summary>
 	bool GameSet();
 
 private:
 
+	/// <summary>デッキ</summary>
 	vector<Card> deck = vector<Card>();
+	/// <summary>表示用のデッキ</summary>
 	int showDeck[DECK_LENGTH];
+	/// <summary>インデックス</summary>
 	int index = 0;
 };
 
+/// <summary>コンストラクタ</summary>
 Deck::Deck()
 {
 	int count = 0;
@@ -47,10 +62,12 @@ Deck::Deck()
 	}
 }
 
+/// <summary>デストラクタ</summary>
 Deck::~Deck()
 {
 }
 
+/// <summary>初期化</summary>
 inline void Deck::Init()
 {
 	int count = 0;
@@ -67,6 +84,7 @@ inline void Deck::Init()
 	}
 }
 
+/// <summary>デッキカードを全て表示</summary>
 inline void Deck::ShowAll()
 {
 	for (int i = 0; i < deck.size(); i++) {
@@ -74,6 +92,7 @@ inline void Deck::ShowAll()
 	}
 }
 
+/// <summary>まだ引いていないデッキカードを表示</summary>
 inline void Deck::ShowAciveCard()
 {
 	int count = 0;
@@ -102,6 +121,7 @@ inline void Deck::ShowAciveCard()
 	cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" << endl;
 }
 
+/// <summary>デッキをシャッフルする</summary>
 inline void Deck::Shuffle()
 {
 	random_device rand;
@@ -110,11 +130,13 @@ inline void Deck::Shuffle()
 	shuffle(deck.begin(), deck.end(), engine);
 }
 
+/// <summary>カードを取得する</summary>
 inline Card Deck::GetCard()
 {
 	return deck[index];
 }
 
+/// <summary>次のカードを設定する</summary>
 inline void Deck::Next()
 {
 	Card card = deck[index];
@@ -126,6 +148,7 @@ inline void Deck::Next()
 	index++;
 }
 
+/// <summary>カードが最後まで引いたかを確認する</summary>
 inline bool Deck::GameSet()
 {
 	return ((DECK_LENGTH - 1) <= index);
